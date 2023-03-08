@@ -1,0 +1,3 @@
+giocatore a deve avere un name, points(saldo disponibile), un plays(giocate fatte dal giocatore in quel momento), status(gioca non gioca)
+
+play deve avere un array di carte attuali(carte di ciascun giocatore sul tavolo), valore in fiche
