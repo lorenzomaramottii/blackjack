@@ -1,0 +1,43 @@
+.player{
+    background-color: #000000;
+    color: #ffffff;
+    font-family: "Arial";
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    top : 80%;
+    padding: 10px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    width: 200px;
+    height: 200px;
+}
+.bottom{
+    position:absolute;
+    bottom: 0px;
+    left: 57px;
+}
+
+.player1 {
+    position:absolute;
+    top: 70%;
+    left: 70%;
+}
+
+.player2 {
+    position:absolute;
+    top: 70%;
+    left: 50%;
+}
+
+.player3 {
+    position:absolute;
+    top: 70%;
+    left: 30%;
+}
+
+.player4 {
+    position:absolute;
+    top: 70%;
+    left: 10%;
+}
