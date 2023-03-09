@@ -18,26 +18,36 @@
     left: 57px;
 }
 
-.player1 {
+.player0 {
     position:absolute;
     top: 70%;
     left: 70%;
 }
 
-.player2 {
+.player1 {
     position:absolute;
     top: 70%;
     left: 50%;
 }
 
-.player3 {
+.player2 {
     position:absolute;
     top: 70%;
     left: 30%;
 }
 
-.player4 {
+.player3 {
     position:absolute;
     top: 70%;
     left: 10%;
+}
+
+.small_image{
+    height: 16;
+    width: 16;
+}
+
+.bottomLeft{
+    height: 16;
+    width: 16;
 }
