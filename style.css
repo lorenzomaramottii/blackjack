@@ -47,6 +47,11 @@
     width: 16;
 }
 
+.fiches_image{
+    height: 32;
+    width: 32;
+}
+
 .bottomLeft{
     height: 16;
     width: 16;
