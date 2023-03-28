@@ -56,3 +56,23 @@
     height: 16;
     width: 16;
 }
+
+circle {
+    transition: all 1s linear;
+}
+
+#c1{
+    transition: all 1s linear;
+    stroke: #DDDEDF;
+    stroke-width: 3;
+    stroke-linecap: round;
+    fill: transparent;
+}
+
+#c2 {
+    transition: all 1s linear;
+    stroke: #545557;
+    stroke-width: 3;
+    stroke-linecap: round;
+    fill: transparent;
+}
