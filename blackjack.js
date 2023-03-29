@@ -8,7 +8,14 @@ const MAX_PLAYERS = 4
 
 const IMAGE_FOLDER = "images"
 
-let PLAYING_GAME = false
+const PHASES = {
+    IDLE: "IDLE",
+    BITTING: "BITTING",
+    PLAYING: "PLAYING",
+    FINISH: "FINISH"
+}
+
+let PLAYING_GAME = PHASES.IDLE
 
 /*
 player= {
@@ -163,60 +170,63 @@ function startTimer(duration) {
             </g>
         </svg>
         `
-    var timeout = setTimeout(function () {
-        var time = duration;
-        var i = 1;
-        var k = ((i/duration) * 100);
-        var l = 100 - k;
-        i++;
-        document.getElementById("c1").style.strokeDasharray = [l,k];
-        document.getElementById("c2").style.strokeDasharray = [k,l];
-        document.getElementById("c1").style.strokeDashoffset = l;
-        document.getElementById("counterText").innerHTML = duration;
-        var interval = setInterval(function() {
+    let timeout = setTimeout(function () {
+        let time = duration
+        let i = 1
+        let k = ((i/duration) * 100)
+        let l = 100 - k
+        i++
+        document.getElementById("c1").style.strokeDasharray = [l,k]
+        document.getElementById("c2").style.strokeDasharray = [k,l]
+        document.getElementById("c1").style.strokeDashoffset = l
+        document.getElementById("counterText").innerHTML = duration
+        let interval = setInterval(function() {
             if (i > time) {
                 document.getElementById("clock").innerHTML = "Clock out"
-                clearInterval(interval);
-                clearTimeout(timeout);
-                return;
+                return
             }
-            k = ((i/duration) * 100);
-            l = 100 - k;
-            document.getElementById("c1").style.strokeDasharray = [l,k];
-            document.getElementById("c2").style.strokeDasharray = [k,l];
-            document.getElementById("c1").style.strokeDashoffset = l;
-            document.getElementById("counterText").innerHTML = (duration +1)-i;
-            i++;
-        }, 1000);
-    },0);
+            k = ((i/duration) * 100)
+            l = 100 - k
+            document.getElementById("c1").style.strokeDasharray = [l,k]
+            document.getElementById("c2").style.strokeDasharray = [k,l]
+            document.getElementById("c1").style.strokeDashoffset = l
+            document.getElementById("counterText").innerHTML = (duration +1)-i
+            i++
+        }, 1000)
+    }, 0)
 }
 
 const startPlayer = (position) => {
-    players[position].playingStatus = true
-    players[position].plays.push({
-        bet: 0,
-        cards: [],
-        result: ""
-    }
-    )
-    document.getElementById(`p${position}_plays`).innerHTML += `
-        <div class="play" id="p${position}_play${players[position].plays.length - 1}">
-            <div class="cards" id="p${position}_play${players[position].plays.length - 1}_cards">
+    if (PLAYING_GAME === "IDLE" || PLAYING_GAME === "BITTING"){
+        players[position].playingStatus = true
+        players[position].plays.push({
+            bet: 0,
+            cards: [],
+            result: ""
+        }
+        )
+        document.getElementById(`p${position}_plays`).innerHTML += `
+            <div class="play" id="p${position}_play${players[position].plays.length - 1}">
+                <div class="cards" id="p${position}_play${players[position].plays.length - 1}_cards">
+                </div>
+                <div>
+                    scommessa attuale: <span id="p${position}_play${players[position].plays.length - 1}_bet">0</span>
+                </div>
             </div>
-            <div>
-                scommessa attuale: <span id="p${position}_play${players[position].plays.length - 1}_bet">0</span>
-            </div>
-        </div>
-    `
-    document.getElementById(`p${position}_buttons`).innerHTML = fishSet(position, 0)
-    if (!PLAYING_GAME){
-        startGame()
+        `
+        document.getElementById(`p${position}_buttons`).innerHTML = fishSet(position, 0)
+        if (PLAYING_GAME === "IDLE"){
+            startGame()
+        }
     }
 }
 
 const startGame = () => {
-    PLAYING_GAME = true
-    startTimer(30)
+    PLAYING_GAME = PHASES.BITTING
+    startTimer(30).then(() => {
+        PLAYING_GAME = PHASES.PLAYING
+        console.log(PLAYING_GAME)
+    })
 }
 
 const bet = (position, playId, value) => {
