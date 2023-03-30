@@ -10,7 +10,7 @@ const IMAGE_FOLDER = "images"
 
 const PHASES = {
     IDLE: "IDLE",
-    BITTING: "BITTING",
+    BETTING: "BITTING",
     PLAYING: "PLAYING",
     FINISH: "FINISH"
 }
@@ -95,6 +95,10 @@ const cards = [
 
 let playingCards = cards.flatMap(el => [el, el, el, el, el, el])
 
+let dealer = {
+    name: "dealer",
+    plays: []
+}
 
 const addPlayer = (position) => {
     //add player to players
@@ -222,7 +226,7 @@ const startPlayer = (position) => {
 }
 
 const startGame = () => {
-    PLAYING_GAME = PHASES.BITTING
+    PLAYING_GAME = PHASES.BETTING
     startTimer(30).then(() => {
         PLAYING_GAME = PHASES.PLAYING
         console.log(PLAYING_GAME)
@@ -240,6 +244,19 @@ const bet = (position, playId, value) => {
     document.getElementById(`p${position}_play${playId}_bet`).innerHTML = players[position].plays[playId].bet
 
     
+}
+
+const cardGiving = (playId) =>{
+    if(players[position].playingStatus){
+        for(let cardsGiven = 0; cardsGiven < 2 ; cardsGiven++){
+            for(let position = 0; position < players.length; position++){
+                let card = pickCard()
+                players[position].plays[playId].cards.push(card)
+            }
+            let card = pickCard()
+            dealer.play.push(card)
+        }
+    }
 }
 
 const hit = (position) => {
