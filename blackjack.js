@@ -164,8 +164,8 @@ const pickCard = () => {
 }
 
 function startTimer(duration) {
-
-    document.getElementById("clock").innerHTML = `
+    return new Promise((resolve , reject) => {
+        document.getElementById("clock").innerHTML = `
         <svg width="100px" height="100px" viewBox="0 0 42 42" class="donut">
             <circle id="c1" cx="21" cy="21" r="16" stroke-dasharray="100 0" stroke-dashoffset="100"></circle>
             <circle id="c2" cx="21" cy="21" r="16" stroke-dasharray="0 100" stroke-dashoffset="0"></circle>
@@ -174,7 +174,7 @@ function startTimer(duration) {
             </g>
         </svg>
         `
-    let timeout = setTimeout(function () {
+        let timeout = setTimeout(function () {
         let time = duration
         let i = 1
         let k = ((i/duration) * 100)
@@ -187,6 +187,7 @@ function startTimer(duration) {
         let interval = setInterval(function() {
             if (i > time) {
                 document.getElementById("clock").innerHTML = "Clock out"
+                resolve()
                 return
             }
             k = ((i/duration) * 100)
@@ -198,6 +199,7 @@ function startTimer(duration) {
             i++
         }, 1000)
     }, 0)
+    })
 }
 
 const startPlayer = (position) => {
@@ -225,14 +227,6 @@ const startPlayer = (position) => {
     }
 }
 
-const startGame = () => {
-    PLAYING_GAME = PHASES.BETTING
-    startTimer(30).then(() => {
-        PLAYING_GAME = PHASES.PLAYING
-        console.log(PLAYING_GAME)
-    })
-}
-
 const bet = (position, playId, value) => {
     if (players[position].credits < value){
         alert("not enough credits")
@@ -246,17 +240,38 @@ const bet = (position, playId, value) => {
     
 }
 
-const cardGiving = (playId) =>{
-    if(players[position].playingStatus){
-        for(let cardsGiven = 0; cardsGiven < 2 ; cardsGiven++){
-            for(let position = 0; position < players.length; position++){
-                let card = pickCard()
-                players[position].plays[playId].cards.push(card)
-            }
-            let card = pickCard()
-            dealer.play.push(card)
+const startGame = () => {
+    PLAYING_GAME = PHASES.BETTING
+    startTimer(5).then(() => {
+        PLAYING_GAME = PHASES.PLAYING
+        console.log(PLAYING_GAME)
+        if(PLAYING_GAME == PHASES.PLAYING){
+            game()
         }
-    }
+    })    
+}
+
+const game = () => {
+    cardGiving()
+}
+
+const cardGiving = () =>{
+
+    players.forEach(e => {
+        if(e.playingStatus == true){
+            for(let cardsGiven = 0; cardsGiven < 2 ; cardsGiven++){
+                for(let position = 0; position < players.length; position++){
+                    let card = pickCard()
+                    e.plays[0].cards.push(card)
+                }
+                let card = pickCard()
+                dealer.plays.push(card)
+                
+            }
+        }
+        console.log(...players.play)
+    })
+    
 }
 
 const hit = (position) => {
@@ -269,6 +284,10 @@ const stand = () => {
 }
 
 const dealerTurn = () => {
+    let sommaDealer = 0
+    for (let i in dealer.plays){
+        sommaDealer += dealer.plays[i]
+    }
     if (sommaDealer < 17){
         sommaDealer += playingCards[pickCard()].value
         numCarteDealer++
