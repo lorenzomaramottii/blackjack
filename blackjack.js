@@ -1,11 +1,7 @@
 const players = []
-
 const START_VALUE = 1000
-
 const MIN_START_VALUE = 10
-
 const MAX_PLAYERS = 4
-
 const IMAGE_FOLDER = "images"
 
 const PHASES = {
@@ -14,7 +10,6 @@ const PHASES = {
     PLAYING: "PLAYING",
     FINISH: "FINISH"
 }
-
 let PLAYING_GAME = PHASES.IDLE
 
 /*
@@ -38,120 +33,14 @@ const fishSet = (position, plays) => {
     `
 }
 
-const cards = [
-    {name: "AC", value: 11},
-    {name: "2C", value: 2},
-    {name: "3C", value: 3},
-    {name: "4C", value: 4},
-    {name: "5C", value: 5},
-    {name: "6C", value: 6},
-    {name: "7C", value: 7},
-    {name: "8C", value: 8},
-    {name: "9C", value: 9},
-    {name: "10C", value: 10},
-    {name: "JC", value: 10},
-    {name: "QC", value: 10},
-    {name: "KC", value: 10},
-    {name: "AD", value: 11},
-    {name: "2D", value: 2},
-    {name: "3D", value: 3},
-    {name: "4D", value: 4},
-    {name: "5D", value: 5},
-    {name: "6D", value: 6},
-    {name: "7D", value: 7},
-    {name: "8D", value: 8},
-    {name: "9D", value: 9},
-    {name: "10D", value: 10},
-    {name: "JD", value: 10},
-    {name: "QD", value: 10},
-    {name: "KD", value: 10},
-    {name: "AH", value: 11},
-    {name: "2H", value: 2},
-    {name: "3H", value: 3},
-    {name: "4H", value: 4},
-    {name: "5H", value: 5},
-    {name: "6H", value: 6},
-    {name: "7H", value: 7},
-    {name: "8H", value: 8},
-    {name: "9H", value: 9},
-    {name: "10H", value: 10},
-    {name: "JH", value: 10},
-    {name: "QH", value: 10},
-    {name: "KH", value: 10},
-    {name: "AS", value: 11},
-    {name: "2S", value: 2},
-    {name: "3S", value: 3},
-    {name: "4S", value: 4},
-    {name: "5S", value: 5},
-    {name: "6S", value: 6},
-    {name: "7S", value: 7},
-    {name: "8S", value: 8},
-    {name: "9S", value: 9},
-    {name: "10S", value: 10},
-    {name: "JS", value: 10},
-    {name: "QS", value: 10},
-    {name: "KS", value: 10},
-]
 
-let playingCards = cards.flatMap(el => [el, el, el, el, el, el])
+
 
 let dealer = {
     name: "dealer",
     plays: []
 }
 
-const addPlayer = (position) => {
-    //add player to players
-    if (players.length <= MAX_PLAYERS){
-        players[position] = {
-            position: position,
-            name: "Guest " + (position + 1),
-            credits: START_VALUE,
-            playingStatus: false,
-            plays: []
-        }
-        document.getElementById(`p${position}`).innerHTML = `
-            <div class="plays" id = "p${position}_plays">
-            </div>
-
-            <div class = "bottom">
-                <div class="buttons" id=p${position}_buttons>
-                    <button onclick="startPlayer(${position})">startPlayer</button>
-                </div>
-                <div class="info">
-                    <img class = "small_image" src="matitina.png" onclick="changeName(${position})" alt=""><span id="p${position}_name">${players[position].name}</span><br>
-                    <span id = "p${position}_cash">CASH: ${players[position].credits}</span><br>
-                    <span id = "p${position}_win">LAST WIN: </span><br>
-                    <img class = "bottomLeft" src ="inter.png" onclick = "deletePlayer(${position})"/>
-                </div>
-            </div>
-        `
-    } else {
-        console.log("Reach max number of players")
-    }
-}
-
-const changeName = (playerId) => {
-    let newName = prompt("inserisci nuovo nome")
-    document.getElementById(`p${playerId}_name`).innerHTML = newName
-}
-
-const changePlayerStatus = () => {
-    
-}
-
-const deletePlayer = (position) => {
-    players[position] = {}
-    document.getElementById(`p${position}`).innerHTML = `<span onclick="addPlayer(${position})">+</span>`
-}
-
-const tester = () => {
-    console.log(players)
-}
-
-const shuffle = () => {
-    playingCards = cards.flatMap(el => [el, el, el, el, el, el])
-}
 
 const pickCard = () => {
     if (playingCards.length <= 69){
@@ -211,16 +100,12 @@ const startPlayer = (position) => {
             result: ""
         }
         )
-        document.getElementById(`p${position}_plays`).innerHTML += `
-            <div class="play" id="p${position}_play${players[position].plays.length - 1}">
-                <div class="cards" id="p${position}_play${players[position].plays.length - 1}_cards">
-                </div>
-                <div>
-                    scommessa attuale: <span id="p${position}_play${players[position].plays.length - 1}_bet">0</span>
-                </div>
+        document.getElementById(`p${position}_body`).innerHTML = `
+            <div>
+                scommessa attuale: <span id="p${position}_play${players[position].plays.length - 1}_bet">0</span>
             </div>
         `
-        document.getElementById(`p${position}_buttons`).innerHTML = fishSet(position, 0)
+        document.getElementById(`p${position}_body`).innerHTML += fishSet(position, 0)
         if (PLAYING_GAME === "IDLE"){
             startGame()
         }
@@ -234,7 +119,7 @@ const bet = (position, playId, value) => {
     }
     players[position].plays[playId].bet += value
     players[position].credits -= value
-    document.getElementById(`p${position}_cash`).innerHTML = `CASH: ${players[position].credits}`
+    document.getElementById(`p${position}_cash`).innerHTML = players[position].credits
     document.getElementById(`p${position}_play${playId}_bet`).innerHTML = players[position].plays[playId].bet
 
     
