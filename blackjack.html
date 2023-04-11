@@ -5,6 +5,7 @@
         <script src = "blackjack.js"></script>
         <script src = "components/player.js"></script>
         <script src = "components/cards.js"></script>
+        <script src = "components/cardsDisplayer.js"></script>
     </head>
     <body>
         <!--
@@ -39,25 +40,25 @@
         </div>
 
 
-        <div class="row row-cols-1 row-cols-md-4 g-4 text-center">
-            <div class="col player0" id= "p0">
-                <div class="">
-                    <h1 onclick="addPlayer(0)">+</h1>
+        <div class="row row-cols-1 row-cols-md-4 g-4">
+            <div class="col player player0 " id= "p0">
+                <div class="text-center">
+                    <h1 class="plus_player" onclick="addPlayer(0)">+</h1>
                 </div>
             </div>
-            <div class="col player1" id= "p1">
+            <div class="col player player1" id= "p1">
                 <div class="text-center">
-                    <h1 onclick="addPlayer(1)">+</h1>
+                    <h1 class="plus_player" onclick="addPlayer(1)">+</h1>
                 </div>
             </div>
-            <div class="col player2" id= "p2">
+            <div class="col player player2" id= "p2">
                 <div class="text-center">
-                    <h1 onclick="addPlayer(2)">+</h1>
+                    <h1 class="plus_player" onclick="addPlayer(2)">+</h1>
                 </div>
             </div>
-            <div class="col player3" id= "p3">
+            <div class="col player player3" id= "p3">
                 <div class="text-center">
-                    <h1 onclick="addPlayer(3)">+</h1>
+                    <h1 class="plus_player" onclick="addPlayer(3)">+</h1>
                 </div>
             </div>
           </div>

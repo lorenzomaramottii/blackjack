@@ -34,13 +34,17 @@ const fishSet = (position, plays) => {
 }
 
 
-
-
 let dealer = {
     name: "dealer",
     plays: []
 }
 
+const startDealer = () => {
+    dealer.plays.push({
+        cards: [],
+        result: ""
+    })
+}
 
 const pickCard = () => {
     if (playingCards.length <= 69){
@@ -131,41 +135,65 @@ const startGame = () => {
         PLAYING_GAME = PHASES.PLAYING
         console.log(PLAYING_GAME)
         if(PLAYING_GAME == PHASES.PLAYING){
-            game()
+            gameLoop()
         }
     })    
 }
 
-const game = () => {
+const gameLoop = () => {
+    startDealer()
+    players.forEach((e, i) => {
+        if(e.playingStatus == true){
+            document.getElementById(`p${i}_body`).innerHTML = `
+            <div>
+                <button onclick="hit(${i})">Hit</button>
+                <button onclick="stand(${i})">Stand</button>
+                <br><br>
+                punteggio: <span id="p${i}_play${e.plays.length - 1}_score">0</span>
+            </div>
+            `
+        }
+    })
     cardGiving()
 }
 
 const cardGiving = () =>{
 
-    players.forEach(e => {
-        if(e.playingStatus == true){
-            for(let cardsGiven = 0; cardsGiven < 2 ; cardsGiven++){
-                for(let position = 0; position < players.length; position++){
-                    let card = pickCard()
-                    e.plays[0].cards.push(card)
-                }
+    for (let i = 0; i<2; i++){
+        players.forEach((e, ind) => {
+            if(e.playingStatus == true){
                 let card = pickCard()
-                dealer.plays.push(card)
-                
+                e.plays[0].cards.push(card)
+                displayCards(card, ind)
+                console.log(`p${ind}_play${e.plays.length - 1}_score`)
+                document.getElementById(`p${ind}_play${e.plays.length - 1}_score`).innerHTML = e.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
             }
-        }
-        console.log(...players.play)
-    })
-    
+            
+        })
+        let card = pickCard()
+        dealer.plays[0].cards.push(card)
+        
+    }    
 }
 
 const hit = (position) => {
-    numCartePlayer++
-    sommaPlayer += playingCards[pickCard()].value
+    if(players[position].playingStatus == true){
+        let card = pickCard()
+        players[position].plays[0].cards.push(card)
+        console.log(players[position].plays[0].cards)
+    }
+    document.getElementById(`p${position}_play${players[position].plays.length - 1}_score`).innerHTML = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0) 
+    checkBust(position)
 }
 
-const stand = () => {
-    //set playingStatus to false
+const stand = (position) => {
+    players[position].playingStatus = false
+    console.log("STAND")
+    document.getElementById(`p${position}_body`).innerHTML = `
+    <div>
+        STAND<br>
+        punteggio: <span id="p${position}_play${players[position].plays.length - 1}_score">${players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0) }</span>
+    </div>`
 }
 
 const dealerTurn = () => {
@@ -183,36 +211,22 @@ const dealerTurn = () => {
     }
 }
 
-const check = (position , sommaPlayer , numCartePlayer , arrDealer) => {
-    if (players[position].playingStatus){
-        if (sommaPlayer > 21){
-            console.log("BUST")
-        }
-        else if (sommaPlayer == 21 || numCartePlayer == 2){
-            console.log("BLACKJACK")
-        }
-        else if (sommaPlayer < 21 || sommmaPlayer > arrDealer[0]){
-            console.log("WIN")
-        }
-        else if (sommaPlayer == arrDealer[0]){
-            console.log("PUSH")
-        }
-        else if (sommaPlayer < arrDealer[0]){
-            console.log("LOSE")
-        }
-        else if (arrDealer[0] > 21){
-            console.log("DEALER BUST")
-            if (sommaPlayer < 21){
-                console.log("WIN")
-            }
-            else{
-                console.log("LOSE")
-            }
-        }
-        else if(arrDealer[0] == 21 || arrDealer[1] == 2){
-            console.log("LOSE")
-        }
+const checkBust = (position) => {
+    let sommaPlayer = 0
+    for (let i in players[position].plays[0].cards){
+        sommaPlayer += players[position].plays[0].cards[i].value
     }
+    if (sommaPlayer > 21){
+        console.log("BUST")
+        players[position].playingStatus = false
+        players[position].plays[0].result = "LOSE"
+        document.getElementById(`p${position}_body`).innerHTML = `
+        <div>
+            BUST<br>
+            punteggio: <span id="p${position}_play${players[position].plays.length - 1}_score">${players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0) }</span>
+        </div>`
+    }
+
 }
 
 

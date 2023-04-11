@@ -1,16 +1,12 @@
+body {
+    background-image: url("./images/Group\ 1\ \(1\).png");
+    background-size: 115% 144%;
+    background-position: -50px -50px;
+}
+
 .player{
-    background-color: #000000;
-    color: #ffffff;
-    font-family: "Arial";
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    top : 80%;
-    padding: 10px;
-    border: 1px solid #000000;
-    border-radius: 10px;
-    width: 200px;
-    height: 200px;
+    width: 250px; 
+    height: 250px;
 }
 .bottom{
     position:absolute;
@@ -20,25 +16,25 @@
 
 .player0 {
     position:absolute;
-    top: 70%;
+    top: 69%;
     left: 70%;
 }
 
 .player1 {
     position:absolute;
-    top: 70%;
+    top: 69%;
     left: 50%;
 }
 
 .player2 {
     position:absolute;
-    top: 70%;
+    top: 69%;
     left: 30%;
 }
 
 .player3 {
     position:absolute;
-    top: 70%;
+    top: 69%;
     left: 10%;
 }
 
@@ -48,8 +44,9 @@
 }
 
 .fiches_image{
-    height: 32;
-    width: 32;
+    height: 44;
+    width: 44;
+    cursor: pointer;
 }
 circle {
     transition: all 1s linear;
@@ -69,4 +66,13 @@ circle {
     stroke-width: 3;
     stroke-linecap: round;
     fill: transparent;
+}
+
+.plus_player{
+    cursor: pointer;
+}
+
+.cards_size{
+    width: 9%; 
+    height: 24.8%;
 }

@@ -10,13 +10,14 @@ const addPlayer = (position) => {
         }
         document.getElementById(`p${position}`).innerHTML = 
         `
-        <div class="card" style="width: 250px; height: 220px;">
-            <div class="card-header text-center">
-                <img class = "small_image" src="matitina.png" onclick="changeName(${position})" alt="">
-                <h5 class="card-title" id="p${position}_name">${players[position].name}</h5>
-            </div>
+        <div class="card bg-transparent" style="width: 250px; height: 240px;">
+            
             <div class="card-body text-center" id=p${position}_body>
                 <a onclick="startPlayer(${position})" class="btn btn-primary">Start Player</a>
+            </div>
+            <div class="card-footer text-center">
+                <img class = "small_image d-inline" src="matitina.png" onclick="changeName(${position})" alt="">
+                <h5 class="card-title d-inline" id="p${position}_name">${players[position].name}</h5>
             </div>
             <div class="card-footer">
                 <div class="row">
