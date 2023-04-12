@@ -142,30 +142,27 @@ const startGame = () => {
 
 const gameLoop = () => {
     startDealer()
-    players.forEach((e, i) => {
+    players.forEach((e, ind) => {
         if(e.playingStatus == true){
-            document.getElementById(`p${i}_body`).innerHTML = `
+            document.getElementById(`p${ind}_body`).innerHTML = `
             <div>
-                <button onclick="hit(${i})">Hit</button>
-                <button onclick="stand(${i})">Stand</button>
-                <br><br>
-                punteggio: <span id="p${i}_play${e.plays.length - 1}_score">0</span>
+                punteggio: <span id="p${ind}_play${e.plays.length - 1}_score">0</span>
             </div>
             `
-        }
-    })
+            }
+        })
+    oneByOne(0)
     cardGiving()
+    
 }
 
 const cardGiving = () =>{
-
     for (let i = 0; i<2; i++){
         players.forEach((e, ind) => {
             if(e.playingStatus == true){
                 let card = pickCard()
                 e.plays[0].cards.push(card)
                 displayCards(card, ind)
-                console.log(`p${ind}_play${e.plays.length - 1}_score`)
                 document.getElementById(`p${ind}_play${e.plays.length - 1}_score`).innerHTML = e.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
             }
             
@@ -174,6 +171,25 @@ const cardGiving = () =>{
         dealer.plays[0].cards.push(card)
         
     }    
+}
+
+// funzione che faccia giocare i giocatori uno alla volta
+
+const oneByOne = (index) => {
+    for (let i = index; i < players.length; i++){   
+        if(players[i].playingStatus == true){
+            
+            document.getElementById(`p${i}_body`).innerHTML += `
+            <div>
+                <button onclick="hit(${i})">Hit</button>
+                <button onclick="stand(${i})">Stand</button>
+                <br><br>
+                
+            </div>
+            `
+            return
+        }
+    }
 }
 
 const hit = (position) => {
@@ -194,6 +210,10 @@ const stand = (position) => {
         STAND<br>
         punteggio: <span id="p${position}_play${players[position].plays.length - 1}_score">${players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0) }</span>
     </div>`
+
+    if (players[position].playingStatus == false){
+        oneByOne(position + 1)
+    }
 }
 
 const dealerTurn = () => {
@@ -226,7 +246,15 @@ const checkBust = (position) => {
             punteggio: <span id="p${position}_play${players[position].plays.length - 1}_score">${players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0) }</span>
         </div>`
     }
+    if (players[position].playingStatus == false){
+        oneByOne(position + 1)
+    }  
+}
 
+const checkWinner = (position) => {
+    if (players[position].plays[0] == true){
+        
+    }
 }
 
 
