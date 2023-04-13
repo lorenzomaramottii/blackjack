@@ -79,7 +79,7 @@ function startTimer(duration) {
         document.getElementById("counterText").innerHTML = duration
         let interval = setInterval(function() {
             if (i > time) {
-                document.getElementById("clock").innerHTML = "Clock out"
+                document.getElementById("clock").innerHTML = ""
                 resolve()
                 return
             }
@@ -165,46 +165,54 @@ const cardGiving = () =>{
                 displayCards(card, ind)
                 document.getElementById(`p${ind}_play${e.plays.length - 1}_score`).innerHTML = e.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
             }
-            
         })
         let card = pickCard()
         dealer.plays[0].cards.push(card)
+        displayCards(card, 4)
+        document.getElementById(`dealer_score`).innerHTML = dealer.plays[0].cards[0].value
         
-    }    
+    }
+    players.forEach((e, ind) => {
+        checkBlackjack(ind)})    
 }
 
 // funzione che faccia giocare i giocatori uno alla volta
 
 const oneByOne = (index) => {
-    for (let i = index; i < players.length; i++){   
-        if(players[i].playingStatus == true){
-            
-            document.getElementById(`p${i}_body`).innerHTML += `
-            <div>
-                <button onclick="hit(${i})">Hit</button>
-                <button onclick="stand(${i})">Stand</button>
-                <br><br>
+    for (let i = index; i < players.length; i++){
+        if (players[i]){
+            if(players[i].playingStatus == true){
                 
-            </div>
-            `
-            return
+                document.getElementById(`p${i}_body`).innerHTML += `
+                <div>
+                    <button onclick="hit(${i})">Hit</button>
+                    <button onclick="stand(${i})">Stand</button>
+                    <br><br>
+                    
+                </div>
+                `
+                return
+            }
         }
     }
+    dealerTurn()
+
 }
 
 const hit = (position) => {
     if(players[position].playingStatus == true){
         let card = pickCard()
         players[position].plays[0].cards.push(card)
-        console.log(players[position].plays[0].cards)
+        displayCards(card, position)
     }
     document.getElementById(`p${position}_play${players[position].plays.length - 1}_score`).innerHTML = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0) 
+    check21(position)
+    aceCheck(position)
     checkBust(position)
 }
 
 const stand = (position) => {
     players[position].playingStatus = false
-    console.log("STAND")
     document.getElementById(`p${position}_body`).innerHTML = `
     <div>
         STAND<br>
@@ -216,28 +224,12 @@ const stand = (position) => {
     }
 }
 
-const dealerTurn = () => {
-    let sommaDealer = 0
-    for (let i in dealer.plays){
-        sommaDealer += dealer.plays[i]
-    }
-    if (sommaDealer < 17){
-        sommaDealer += playingCards[pickCard()].value
-        numCarteDealer++
-        dealerTurn()
-    }
-    else{
-        return arrDealer = [sommaDealer, numCarteDealer]
-    }
-}
-
 const checkBust = (position) => {
     let sommaPlayer = 0
     for (let i in players[position].plays[0].cards){
         sommaPlayer += players[position].plays[0].cards[i].value
     }
     if (sommaPlayer > 21){
-        console.log("BUST")
         players[position].playingStatus = false
         players[position].plays[0].result = "LOSE"
         document.getElementById(`p${position}_body`).innerHTML = `
@@ -251,10 +243,74 @@ const checkBust = (position) => {
     }  
 }
 
-const checkWinner = (position) => {
-    if (players[position].plays[0] == true){
-        
+const check21 = (position) => {
+    let sommaPlayer = 0
+    sommaPlayer = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0)
+    if (sommaPlayer == 21){
+        stand(position)
     }
 }
 
+const checkBlackjack = (position) => {
+    let sommaPlayer = 0
+    sommaPlayer = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0)
+    if (sommaPlayer == 21){
+        players[position].playingStatus = false
+        document.getElementById(`p${position}_body`).innerHTML = `
+        <div>
+            HAI FATTO BLACKJACK
+        </div>
+        `
+        oneByOne(position + 1)
+    }
+}
 
+const aceCheck = (position) => {
+    let sommaPlayer = 0
+    sommaPlayer = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0)
+    if (sommaPlayer > 21){
+        for (let i in players[position].plays[0].cards){
+            if (players[position].plays[0].cards[i].value == 11){
+                players[position].plays[0].cards[i].value = 1
+            }
+        }
+    }
+
+    document.getElementById(`p${position}_play${players[position].plays.length - 1}_score`).innerHTML = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0) 
+}
+
+const dealerTurn = () => {
+    let sommaDealer = 0
+    displaySecondDealerCard()
+    sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
+    while(sommaDealer < 17){
+        let card = pickCard()
+        dealer.plays[0].cards.push(card)
+        sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
+        displayCards(card, 4)
+    }
+    document.getElementById(`dealer_score`).innerHTML = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
+    checkDealerBust()
+}
+
+const aceCheckDealer = () => {
+    let sommaDealer = 0
+    sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
+    if (sommaDealer > 21){
+        for (let i in dealer.plays[0].cards){
+            if (dealer.plays[0].cards[i].value == 11){
+                dealer.plays[0].cards[i].value = 1
+            }
+        }
+    }
+
+    document.getElementById(`dealer_score`).innerHTML = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
+}
+
+const checkDealerBust = () => { 
+    let sommaDealer = 0
+    sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
+    if (sommaDealer > 21){
+        aceCheckDealer()
+    }
+}

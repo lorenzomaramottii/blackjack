@@ -16,7 +16,7 @@ const addPlayer = (position) => {
                 <a onclick="startPlayer(${position})" class="btn btn-primary">Start Player</a>
             </div>
             <div class="card-footer text-center">
-                <img class = "small_image d-inline" src="matitina.png" onclick="changeName(${position})" alt="">
+                <img class = "small_image d-inline" src="pencil.png" onclick="changeName(${position})" alt="">
                 <h5 class="card-title d-inline" id="p${position}_name">${players[position].name}</h5>
             </div>
             <div class="card-footer">
