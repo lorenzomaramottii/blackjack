@@ -10,16 +10,16 @@ const addPlayer = (position) => {
         }
         document.getElementById(`p${position}`).innerHTML = 
         `
-        <div class="card bg-transparent" style="width: 250px; height: 240px;">
+        <div class="card bg-transparent border-2" style="width: 250px; height: 250px; border-color:#FFFF00;">
             
-            <div class="card-body text-center" id=p${position}_body>
-                <a onclick="startPlayer(${position})" class="btn btn-primary">Start Player</a>
+            <div class="card-body text-center fw-bold" id=p${position}_body>
+                <a onclick="startPlayer(${position})" class="btn btn-warning">Start Player</a>
             </div>
-            <div class="card-footer text-center">
-                <img class = "small_image d-inline" src="pencil.png" onclick="changeName(${position})" alt="">
+            <div class="card-footer text-center fw-bold">
+                <img class = "small_image d-inline" src="pencil_real.png" onclick="changeName(${position})" alt="">
                 <h5 class="card-title d-inline" id="p${position}_name">${players[position].name}</h5>
             </div>
-            <div class="card-footer">
+            <div class="card-footer fw-bold">
                 <div class="row">
                     <div class="col">
                     <small class="text-body-secondary">Credits: <span id="p${position}_cash">${players[position].credits}</span></small>
@@ -56,3 +56,4 @@ const deletePlayer = (position) => {
 const checkPlayers = () => {
     console.log(players)
 }
+
