@@ -6,7 +6,7 @@ const IMAGE_FOLDER = "images"
 
 const PHASES = {
     IDLE: "IDLE",
-    BETTING: "BETTING",
+    BETTING: "BITTING",
     PLAYING: "PLAYING",
     FINISH: "FINISH"
 }
@@ -79,10 +79,8 @@ function startTimer(duration) {
         document.getElementById("counterText").innerHTML = duration
         let interval = setInterval(function() {
             if (i > time) {
-                console.log(timeout)
-                document.getElementById("clock").innerHTML = ""
+                document.getElementById("clock").innerHTML = "Clock out"
                 resolve()
-                clearInterval(interval)
                 return
             }
             k = ((i/duration) * 100)
@@ -97,10 +95,8 @@ function startTimer(duration) {
     })
 }
 
-
-
 const startPlayer = (position) => {
-    if (PLAYING_GAME === "IDLE" || PLAYING_GAME === "BETTING"){
+    if (PLAYING_GAME === "IDLE" || PLAYING_GAME === "BITTING"){
         players[position].playingStatus = true
         players[position].plays.push({
             bet: 0,
@@ -133,7 +129,7 @@ const bet = (position, playId, value) => {
     
 }
 
-function startGame(){
+const startGame = () => {
     PLAYING_GAME = PHASES.BETTING
     startTimer(5).then(() => {
         PLAYING_GAME = PHASES.PLAYING
@@ -169,52 +165,46 @@ const cardGiving = () =>{
                 displayCards(card, ind)
                 document.getElementById(`p${ind}_play${e.plays.length - 1}_score`).innerHTML = e.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
             }
+            
         })
         let card = pickCard()
         dealer.plays[0].cards.push(card)
-        displayCards(card, 4)
-        document.getElementById(`dealer_score`).innerHTML = dealer.plays[0].cards[0].value
         
-    }
-    checkBlackjackDealer()
-    players.forEach((e, ind) => {
-        checkBlackjack(ind)})    
+    }    
 }
 
+// funzione che faccia giocare i giocatori uno alla volta
+
 const oneByOne = (index) => {
-    for (let i = index; i < players.length; i++){
-        if (players[i]){
-            if(players[i].playingStatus == true){
+    for (let i = index; i < players.length; i++){   
+        if(players[i].playingStatus == true){
+            
+            document.getElementById(`p${i}_body`).innerHTML += `
+            <div>
+                <button onclick="hit(${i})">Hit</button>
+                <button onclick="stand(${i})">Stand</button>
+                <br><br>
                 
-                document.getElementById(`p${i}_body`).innerHTML += `
-                <div>
-                    <button onclick="hit(${i})">Hit</button>
-                    <button onclick="stand(${i})">Stand</button>
-                    <br><br>
-                    
-                </div>
-                `
-                return
-            }
+            </div>
+            `
+            return
         }
     }
-    dealerTurn()
 }
 
 const hit = (position) => {
     if(players[position].playingStatus == true){
         let card = pickCard()
         players[position].plays[0].cards.push(card)
-        displayCards(card, position)
+        console.log(players[position].plays[0].cards)
     }
     document.getElementById(`p${position}_play${players[position].plays.length - 1}_score`).innerHTML = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0) 
-    check21(position)
-    aceCheck(position)
     checkBust(position)
 }
 
 const stand = (position) => {
     players[position].playingStatus = false
+    console.log("STAND")
     document.getElementById(`p${position}_body`).innerHTML = `
     <div>
         STAND<br>
@@ -226,12 +216,28 @@ const stand = (position) => {
     }
 }
 
+const dealerTurn = () => {
+    let sommaDealer = 0
+    for (let i in dealer.plays){
+        sommaDealer += dealer.plays[i]
+    }
+    if (sommaDealer < 17){
+        sommaDealer += playingCards[pickCard()].value
+        numCarteDealer++
+        dealerTurn()
+    }
+    else{
+        return arrDealer = [sommaDealer, numCarteDealer]
+    }
+}
+
 const checkBust = (position) => {
     let sommaPlayer = 0
     for (let i in players[position].plays[0].cards){
         sommaPlayer += players[position].plays[0].cards[i].value
     }
     if (sommaPlayer > 21){
+        console.log("BUST")
         players[position].playingStatus = false
         players[position].plays[0].result = "LOSE"
         document.getElementById(`p${position}_body`).innerHTML = `
@@ -245,189 +251,10 @@ const checkBust = (position) => {
     }  
 }
 
-const check21 = (position) => {
-    let sommaPlayer = 0
-    sommaPlayer = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-    if (sommaPlayer == 21){
-        stand(position)
-    }
-    players[position].plays[0].result = "WIN"
-}
-
-const checkBlackjack = (position) => {
-    let sommaPlayer = 0
-    sommaPlayer = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-    if (sommaPlayer == 21){
-        players[position].playingStatus = false
-        players[position].plays[0].result = "BLACKJACK"
-        document.getElementById(`p${position}_body`).innerHTML = `
-        <div>
-            HAI FATTO BLACKJACK
-        </div>
-        `
-        oneByOne(position + 1)
+const checkWinner = (position) => {
+    if (players[position].plays[0] == true){
+        
     }
 }
 
-const checkBlackjackDealer = () => {
-    let sommaDealer = 0
-    sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-    if (sommaDealer == 21){
-        for(let i in players){
-            players[i].playingStatus = false
-            players[i].plays[0].result = "LOSE"
-            document.getElementById(`p${i}_body`).innerHTML = `
-            <div>
-                HAI PERSO
-            </div>
-            `
-        }
-    }
-}
 
-const aceCheck = (position) => {
-    let sommaPlayer = 0
-    sommaPlayer = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-    if (sommaPlayer > 21){
-        for (let i in players[position].plays[0].cards){
-            if (players[position].plays[0].cards[i].value == 11 && sommaPlayer > 21){
-                players[position].plays[0].cards[i].value = 1
-            }
-            sommaPlayer = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-        }
-    }
-
-    document.getElementById(`p${position}_play${players[position].plays.length - 1}_score`).innerHTML = players[position].plays[0].cards.reduce((acc , e) => acc + e.value, 0) 
-}
-
-const dealerTurn = () => {
-    let sommaDealer = 0
-    displaySecondDealerCard()
-    sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-    while(sommaDealer < 17){
-        let card = pickCard()
-        dealer.plays[0].cards.push(card)
-        sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-        displayCards(card, 4)
-        checkDealerBust()
-    }
-    document.getElementById(`dealer_score`).innerHTML = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-
-}
-
-const aceCheckDealer = () => {
-    let sommaDealer = 0
-    sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-    if (sommaDealer > 21){
-        for (let i in dealer.plays[0].cards){
-            if (dealer.plays[0].cards[i].value == 11 && sommaDealer > 21){
-                dealer.plays[0].cards[i].value = 1
-            }
-            sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-        }
-    }
-
-    document.getElementById(`dealer_score`).innerHTML = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-}
-
-const checkDealerBust = () => { 
-    let sommaDealer = 0
-    sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-    if (sommaDealer >= 17){
-        if (sommaDealer > 21){
-            aceCheckDealer()
-            if (sommaDealer > 21){
-                checkWinner()
-            }
-            else return
-        } else {
-            checkWinner()
-        }
-    }
-     
-}
-
-const checkWinner = () => {
-    let sommaDealer = 0
-    sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-    for (let i in players){
-        let sommaPlayer = 0
-        sommaPlayer = players[i].plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-        if (sommaPlayer > sommaDealer && sommaPlayer <= 21){
-            players[i].plays[0].result = "WIN"
-        }
-        else if(sommaDealer > 21 && sommaPlayer <= 21){
-            players[i].plays[0].result = "WIN"
-        }
-        else if(sommaPlayer == sommaDealer){
-            players[i].plays[0].result = "PUSH"
-        }
-        else{
-            players[i].plays[0].result = "LOSE"
-        }
-    }
-    payBets()
-}
-
-const payBets = () => {
-    for (let i in players){
-        if (players[i].plays[0].result == "WIN"){
-            players[i].credits += (players[i].plays[0].bet) * 2
-            document.getElementById(`p${i}_cash`).innerHTML = players[i].credits
-            document.getElementById(`p${i}_win`).innerHTML = (players[i].plays[0].bet) * 2
-            document.getElementById(`p${i}_body`).innerHTML = `
-            <div>
-                HAI VINTO
-                punteggio: <span id="p${i}_play${players[i].plays.length - 1}_score">${players[i].plays[0].cards.reduce((acc , e) => acc + e.value, 0) }</span>
-            </div>`
-            console.log("credits:" + players[i].credits)
-        }
-        else if(players[i].plays[0].result == "PUSH"){
-            players[i].credits += players[i].plays[0].bet
-            document.getElementById(`p${i}_cash`).innerHTML = players[i].credits
-            document.getElementById(`p${i}_win`).innerHTML = (players[i].plays[0].bet)
-            document.getElementById(`p${i}_body`).innerHTML = `
-            <div>
-                HAI PAREGGIATO
-                punteggio: <span id="p${i}_play${players[i].plays.length - 1}_score">${players[i].plays[0].cards.reduce((acc , e) => acc + e.value, 0) }</span>
-            </div>`
-            console.log("credits:" + players[i].credits)
-        }
-        else if(players[i].plays[0].result == "BLACKJACK"){
-            players[i].credits += (players[i].plays[0].bet) * 2.5
-            document.getElementById(`p${i}_cash`).innerHTML = players[i].credits
-            document.getElementById(`p${i}_win`).innerHTML += (players[i].plays[0].bet) * 2.5
-            document.getElementById(`p${i}_body`).innerHTML = `
-            <div>
-                HAI FATTO BLACKJACK E HAI PIU' CULO CHE ANIMA
-                punteggio: <span id="p${i}_play${players[i].plays.length - 1}_score">${players[i].plays[0].cards.reduce((acc , e) => acc + e.value, 0) }</span>
-            </div>`
-            console.log("credits:" + players[i].credits)
-        }
-        else{
-            document.getElementById(`p${i}_cash`).innerHTML = players[i].credits
-            document.getElementById(`p${i}_body`).innerHTML = `
-            <div>
-                HAI PERSO
-                punteggio: <span id="p${i}_play${players[i].plays.length - 1}_score">${players[i].plays[0].cards.reduce((acc , e) => acc + e.value, 0) }</span>
-            </div>`
-            console.log("credits:" + players[i].credits)
-        }
-    }
-    resetMatch()
-}
-
-const resetMatch = () => {
-    startTimer(15).then(() => {
-        removeCards()
-        PLAYING_GAME = "IDLE"
-        dealer.plays[0].cards = []
-        dealer.plays[0].result = ""
-        for (let i in players){
-            players[i].plays = []
-            players[i].playingStatus = false
-            document.getElementById(`p${i}_body`).innerHTML = `
-            <a onclick="startPlayer(${i})" class="btn btn-primary">Start Player</a>`
-        }
-    })
-}
