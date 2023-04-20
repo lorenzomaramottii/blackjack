@@ -55,7 +55,7 @@ circle {
 
 #c1{
     transition: all 1s linear;
-    stroke: #DDDEDF;
+    stroke: #000;
     stroke-width: 3;
     stroke-linecap: round;
     fill: transparent;
@@ -63,7 +63,7 @@ circle {
 
 #c2 {
     transition: all 1s linear;
-    stroke: #545557;
+    stroke: #DDA30E;
     stroke-width: 3;
     stroke-linecap: round;
     fill: transparent;
