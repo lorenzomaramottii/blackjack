@@ -285,7 +285,9 @@ const checkBlackjackDealer = () => {
             </div>
             `
         }
+        checkWinner()
     }
+    
 }
 
 const aceCheck = (position) => {
