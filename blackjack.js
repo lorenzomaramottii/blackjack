@@ -270,6 +270,7 @@ const checkBlackjack = (position) => {
         `
         oneByOne(position + 1)
     }
+    payBets()
 }
 
 const checkBlackjackDealer = () => {
@@ -337,20 +338,6 @@ const aceCheckDealer = () => {
     document.getElementById(`dealer_score`).innerHTML = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
 }
 
-// const checkDealerBust = () => {
-//     console.log("ciao") 
-//     let sommaDealer = 0
-    
-//     sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-//     if (sommaDealer > 21){
-//         aceCheckDealer()
-//     }
-//     sommaDealer = dealer.plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-//     if (sommaDealer >= 17){
-//         console.log("ass")
-//         checkWinner()
-//     }  
-// }
 
 const checkWinner = () => {
     console.log("Sì")
@@ -359,7 +346,10 @@ const checkWinner = () => {
     for (let i in players){
         let sommaPlayer = 0
         sommaPlayer = players[i].plays[0].cards.reduce((acc , e) => acc + e.value, 0)
-        if (sommaPlayer > sommaDealer && sommaPlayer <= 21){
+        if(players[i].result == "BLACKJACK"){
+            console.log("gg")
+        }
+        else if (sommaPlayer > sommaDealer && sommaPlayer <= 21){
             players[i].plays[0].result = "WIN"
         }
         else if(sommaDealer > 21 && sommaPlayer <= 21){
@@ -372,7 +362,6 @@ const checkWinner = () => {
             players[i].plays[0].result = "LOSE"
         }
     }
-    payBets()
 }
 
 const payBets = () => {
