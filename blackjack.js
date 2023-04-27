@@ -270,7 +270,6 @@ const checkBlackjack = (position) => {
         `
         oneByOne(position + 1)
     }
-    payBets()
 }
 
 const checkBlackjackDealer = () => {
@@ -362,6 +361,7 @@ const checkWinner = () => {
             players[i].plays[0].result = "LOSE"
         }
     }
+    payBets()
 }
 
 const payBets = () => {
