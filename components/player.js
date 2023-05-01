@@ -16,7 +16,7 @@ const addPlayer = (position) => {
                 <a onclick="startPlayer(${position})" class="btn btn-warning">Start Player</a>
             </div>
             <div class="card-footer text-center fw-bold">
-                <img class = "small_image d-inline" src="pencil_real.png" onclick="changeName(${position})" alt="">
+                <img class = "small_image d-inline" src="images/pencil_real.png" onclick="changeName(${position})" alt="">
                 <h5 class="card-title d-inline" id="p${position}_name">${players[position].name}</h5>
             </div>
             <div class="card-footer fw-bold">
@@ -29,7 +29,7 @@ const addPlayer = (position) => {
                     </div>
                 </div>
                 <div class = "text-center">
-                    <img class = "small_image " src ="inter.png" onclick = "deletePlayer(${position})"/>
+                    <img class = "small_image " src ="images/trashCan.png" onclick = "deletePlayer(${position})"/>
                 </div>
             </div>
           </div>
@@ -56,4 +56,3 @@ const deletePlayer = (position) => {
 const checkPlayers = () => {
     console.log(players)
 }
-

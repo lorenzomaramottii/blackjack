@@ -5,7 +5,6 @@ BACKS = ["BLUE_BACK.svg", "RED_BACK.svg"]
 
 const displayCards = (card, position) => {
     let positionX, positionY, rotation = 0
-    console.log(BACKS.length)
     if (position == 4){
         positionY = POSITIONS[position][0] + (TRANSPORT[position][0] * (dealer.plays[0].cards.length - 1))
         positionX = POSITIONS[position][1] + (TRANSPORT[position][1] * (dealer.plays[0].cards.length - 1))
@@ -25,7 +24,6 @@ const displayCards = (card, position) => {
         positionX = POSITIONS[position][1] + (TRANSPORT[position][1] * (players[position].plays[0].cards.length - 1))
         rotation = POSITIONS[position][2] + (TRANSPORT[position][2] * (players[position].plays[0].cards.length - 1))
     }
-    console.log([positionX, positionY, rotation])
     document.body.innerHTML += `
     <img class = "cards_size playing-cards" src="images/cards/${card.name}.svg" alt="${card.value} of ${card.name}" 
     style="position: absolute; top: ${positionY}%; left: ${positionX}%; transform: rotate(${rotation}deg);">`
